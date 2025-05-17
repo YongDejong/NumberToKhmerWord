@@ -1,1 +1,1 @@
-# NumberToKhmerWord
+# Mozilla Thunderbird Guideline
