@@ -113,6 +113,68 @@ function convertNumber(e) {
     <span id="khmerResult"></span><br>
     <span id="englishResult"></span><br>
     <span id="DollarResult"></span>
+    <table id="historyTable" style="width:100%;margin-top:20px;border-collapse:collapse;display:none;">
+      <thead>
+        <tr>
+          <th style="border:1px solid #ccc;padding:8px;">លេខ</th>
+          <th style="border:1px solid #ccc;padding:8px;">អក្សរខ្មែរ</th>
+          <th style="border:1px solid #ccc;padding:8px;">English</th>
+          <th style="border:1px solid #ccc;padding:8px;">Dollar</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <script>
+      function addToHistory(number, khmer, english, dollar) {
+        const table = document.getElementById('historyTable');
+        const tbody = table.querySelector('tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td style="border:1px solid #ccc;padding:8px;">${number}</td>
+          <td style="border:1px solid #ccc;padding:8px;">${khmer} រៀល</td>
+          <td style="border:1px solid #ccc;padding:8px;">${english} Riel</td>
+          <td style="border:1px solid #ccc;padding:8px;">${dollar}$</td>
+        `;
+        tbody.prepend(row);
+        table.style.display = '';
+      }
+
+      const origConvertNumber = convertNumber;
+      convertNumber = function(e) {
+        origConvertNumber(e);
+        const number = document.getElementById("numberInput").value.trim();
+        const khmer = numberToKhmerWords(number);
+        const english = numberToEnglishWords(number);
+        const dollar = (Number(number) / 4000).toFixed(2);
+        addToHistory(number, khmer, english, dollar);
+      }
+      window.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        let clearBtn = document.createElement('button');
+        clearBtn.type = 'button';
+        clearBtn.textContent = 'Clear History';
+        clearBtn.style.marginTop = '10px';
+        clearBtn.style.width = form.offsetWidth + 'px';
+        clearBtn.style.padding = '12px';
+        clearBtn.style.fontSize = '16px';
+        clearBtn.style.boxSizing = 'border-box';
+        clearBtn.onclick = function() {
+          const tbody = document.getElementById('historyTable').querySelector('tbody');
+          tbody.innerHTML = '';
+          document.getElementById('historyTable').style.display = 'none';
+        };
+
+        let wrapper = document.createElement('div');
+        wrapper.style.width = '100%';
+        wrapper.appendChild(clearBtn);
+        form.parentNode.insertBefore(wrapper, form.nextSibling);
+
+        window.addEventListener('resize', function() {
+          clearBtn.style.width = form.offsetWidth + 'px';
+        });
+      });
+    </script>
   </div>
 </body>
 </html>
